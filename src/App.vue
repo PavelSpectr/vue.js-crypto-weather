@@ -1,5 +1,9 @@
 <script>
+import User from './components/User.vue'
+
 export default {
+  components: {User},
+
   data() {
     return {
       users: [],
@@ -26,6 +30,9 @@ export default {
         pass: this.userPass,
         email: this.userEmail
       })
+    },
+    deleteUser(index) {
+      this.users.splice(index, 1);
     }
   }
 }
@@ -49,10 +56,7 @@ export default {
     We have more than 1 element
   </div>
 
-  <div v-for="(el, index) in users" :key = index className="user">
-    <h3>{{el.name}}</h3>
-    <p>{{el.email}} - <b>{{el.pass}}</b></p>
-  </div>
+  <User v-for="(el, index) in users" :key=index :user="el" :index="index" :deleteUser="deleteUser" />
 
 </template>
 
@@ -62,7 +66,7 @@ input {
   margin-bottom: 10px;
   border-radius: 3px;
   border: 1px solid silver;
-  outline: non;
+  outline: none;
   padding: 10px 15px;
   background: #fafafa;
   color: #333;
