@@ -44,7 +44,7 @@ import axios from "axios";
 <template>
   <div class="wrapper">
     <h1>Weather App</h1>
-    <p>Check your weather in {{ city == "" ? "yours city" : cityName}}</p>
+    <p>Check weather in {{ city == "" ? "yours city" : cityName}}</p>
     <input type="text" v-model=city placeholder="Input city">
     <!--<button v-show="city != ''">Get weather</button>-->
     <button v-if="city != ''" @click=getWeather>Get weather</button>
