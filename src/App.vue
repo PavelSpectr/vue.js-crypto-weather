@@ -1,100 +1,120 @@
 <script>
-import User from './components/User.vue'
+import axios from "axios";
 
-export default {
-  components: {User},
-
-  data() {
-    return {
-      users: [],
-      error: '',
-      userName: '',
-      userPass: '',
-      userEmail: ''
-    }
-  },
-  methods: {
-    sendData() {
-      if(this.userName == '') {
-        this.error = 'Empty name';
-        return;
-      } else if(this.userPass == '') {
-        this.error = 'Empty pass';
-        return;
-      } else if(this.userEmail == '') {
-        this.error = 'Empty email';
-        return;
+  export default {
+    data() {
+      return {
+        city: "",
+        error: "",
+        info: null
       }
-      this.users.push({
-        name: this.userName,
-        pass: this.userPass,
-        email: this.userEmail
-      })
     },
-    deleteUser(index) {
-      this.users.splice(index, 1);
+    computed: {
+      cityName() {
+        return '"' + this.city + '"'
+      },
+      showTemp() {
+        return "Temperature: " + this.info.main.temp
+      },
+      showFeelsLike() {
+        return "Feels like: " + this.info.main.feels_like
+      },
+      showMinTemperature() {
+        return "Min temperature: " + this.info.main.temp_min
+      },
+      showMaxTemperature() {
+        return "Max temperature: " + this.info.main.temp_max
+      },
+    },
+    methods: {
+      getWeather() {
+        if(this.city.trim().length < 2) {
+          this.error = "City can't be less 2 chars"
+          return false;
+        }
+        this.error = ""
+
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=eec476f912397d253d3eaef15c3f322b`)
+            .then(resolve => (this.info = resolve.data))
+      }
     }
   }
-}
 </script>
 
 <template>
-  <input type="text" v-model = userName placeholder="Name">
-  <input type="password" v-model = userPass placeholder="Password">
-  <input type="email" v-model = userEmail placeholder="Email">
-  <p className="error">{{error}}</p>
+  <div class="wrapper">
+    <h1>Weather App</h1>
+    <p>Check your weather in {{ city == "" ? "yours city" : cityName}}</p>
+    <input type="text" v-model=city placeholder="Input city">
+    <!--<button v-show="city != ''">Get weather</button>-->
+    <button v-if="city != ''" @click=getWeather>Get weather</button>
+    <button disabled v-else>Input city</button>
+    <p class="error">{{ error }}</p>
 
-  <button @click = sendData()>Send</button>
-
-  <div v-if="users.length == 0" className="user">
-    We have no users
+    <div v-if="info != null">
+      <p>{{ showTemp }}</p>
+      <p>{{ showFeelsLike }}</p>
+      <p>{{ showMinTemperature }}</p>
+      <p>{{ showMaxTemperature }}</p>
+    </div>
   </div>
-  <div v-else-if="users.length == 1" className="user">
-    We have only 1 user
-  </div>
-  <div v-else className="user">
-    We have more than 1 element
-  </div>
-
-  <User v-for="(el, index) in users" :key=index :user="el" :index="index" :deleteUser="deleteUser" />
-
 </template>
 
 <style scoped>
-input {
-  display: block;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  border: 1px solid silver;
-  outline: none;
-  padding: 10px 15px;
-  background: #fafafa;
-  color: #333;
-}
+  .error {
+    color: #d03939
+  }
 
-button {
-  border: 0;
-  border-radius: 5px;
-  outline: none;
-  padding: 10px 15px;
-  background: #6cd670;
-  color: #167f3d;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 500ms ease;
-}
+  .wrapper {
+    width: 900px;
+    height: 500px;
+    border-radius: 50px;
+    padding: 20px;
+    background: #1f0f24;
+    text-align: center;
+    color: #fff
+  }
 
-button:hover {
-  transform: translateY(-5px);
-}
+  .wrapper h1 {
+    margin-top: 50px;
+  }
 
-.user {
-  width: 500px;
-  margin-top: 20px;
-  border: 1px solid silver;
-  background: #e3e3e3;
-  color: #222;
-  padding: 20px;
-  border-radius: 5px;
-}
+  .wrapper p {
+    margin-top: 20px;
+  }
+
+  .wrapper input {
+    margin-top: 30px;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid #110813;
+    color: #fcfcfc;
+    font-size: 14px;
+    padding: 5px 8px;
+    outline: none;
+  }
+
+  .wrapper input:focus {
+    border-bottom-color: #6e2d7d;
+  }
+
+  .wrapper button {
+    background: #e3bc4b;
+    color: #fff;
+    border-radius: 10px;
+    border: 2px solid #b99935;
+    padding: 10px 15px;
+    margin-left: 20px;
+    cursor: pointer;
+    transition: transform 500ms ease;
+  }
+
+  .wrapper button:hover {
+    transform: scale(1.1) translateY(-5px);
+  }
+
+  .wrapper button:disabled {
+    background: #746027;
+    cursor: not-allowed;
+  }
 </style>
