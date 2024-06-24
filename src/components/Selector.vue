@@ -1,14 +1,23 @@
 <script>
 export default {
-
+  props: {
+    setCrypto: {
+      type: Function,
+      required: true
+    },
+    cryptoNow: {
+      type: String,
+      required: true
+    }
+  }
 }
 </script>
 
 <template>
   <ul>
-    <li>Bitcoin</li>
-    <li>ETH</li>
-    <li>USDT</li>
+    <li @click="setCrypto('BTC')" :className="cryptoNow == 'BTC' ? 'active' : ''">Bitcoin</li>
+    <li @click="setCrypto('ETH')" :className="cryptoNow == 'ETH' ? 'active' : ''">ETH</li>
+    <li @click="setCrypto('USDT')" :className="cryptoNow == 'USDT' ? 'active' : ''">USDT</li>
   </ul>
 </template>
 
