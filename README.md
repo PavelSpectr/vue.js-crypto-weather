@@ -1,6 +1,6 @@
-# first-project
+# Vue.js Project consist Weather App and Crypto App in different commits
 
-This template should help get you started developing with Vue 3 in Vite.
+You can to learn it and use for grow your experiense.
 
 ## Recommended IDE Setup
 
